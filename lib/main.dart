@@ -55,11 +55,12 @@ class _MyHomePageState extends State<MyHomePage>
   double startVal = 0;
   double endVal = 0;
   bool flag = true;
+  bool firstTime = true;
 
   @override
   void initState() {
     animationcontroller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
 
     animation = Tween<double>(begin: 0, end: 500).animate(animationcontroller);
     animation.addListener(() {
@@ -70,12 +71,22 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
   }
 
-  setAnimation() {}
+  setAnimation(double mediaHeight, double mediaWidth) {
+    animation = Tween<double>(
+      begin: 0,
+      end: mediaWidth * 1.5,
+    ).animate(animationcontroller);
+    firstTime = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     var mediaHeight = MediaQuery.of(context).size.height;
     var mediaWidth = MediaQuery.of(context).size.width;
+
+    if (firstTime == true) {
+      setAnimation(mediaHeight, mediaWidth);
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -85,9 +96,10 @@ class _MyHomePageState extends State<MyHomePage>
         width: mediaWidth,
         child: Stack(
           children: [
+            //outer circle
             Positioned(
-              bottom: -125,
-              right: -125,
+              bottom: -mediaWidth * 1.5 / 2,
+              right: -mediaWidth * 1.5 / 2,
               child: Stack(children: [
                 Container(
                   padding: EdgeInsets.all(20),
@@ -101,22 +113,36 @@ class _MyHomePageState extends State<MyHomePage>
                     width: animation.value, //value from animation controller
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  alignment: Alignment.center,
+                // Positioned(
+                //   bottom: -10,
+                //   child: Container(
+                //     height: 300,
+                //     width: 10,
+                //     color: Colors.yellow,
+                //   ),
+                // ),
+                //inner circle
+                Positioned(
+                  bottom: mediaWidth * 1.5 / 4,
+                  right: mediaWidth * 1.5 / 4,
                   child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, //making box to circle
-                        color: Colors.lime //background of container
-                        ),
-                    height:
-                        animation.value / 2, //value from animation controller
-                    width:
-                        animation.value / 2, //value from animation controller
+                    padding: EdgeInsets.all(20),
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, //making box to circle
+                          color: Colors.white //background of container
+                          ),
+                      height:
+                          animation.value / 2, //value from animation controller
+                      width:
+                          animation.value / 2, //value from animation controller
+                    ),
                   ),
                 ),
               ]),
             ),
+            //button
             Positioned(
               bottom: 10,
               right: 10,
@@ -125,6 +151,7 @@ class _MyHomePageState extends State<MyHomePage>
                 width: 60,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
                   ),
