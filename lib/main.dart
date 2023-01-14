@@ -1,4 +1,7 @@
+import 'package:animated_floatingbutton/experiment/exp_1.dart';
+import 'package:animated_floatingbutton/experiment/exp_2.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +27,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Animations'),
+      home: MyHomePage(
+        title: 'Hello',
+      ),
     );
   }
 }
@@ -92,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage>
         title: Text(widget.title),
       ),
       body: Container(
+        color: Colors.pink,
         height: mediaHeight,
         width: mediaWidth,
         child: Stack(
@@ -102,17 +108,22 @@ class _MyHomePageState extends State<MyHomePage>
               right: -mediaWidth * 1.5 / 2,
               child: Stack(children: [
                 Container(
-                  padding: EdgeInsets.all(20),
-                  alignment: Alignment.center,
+                  color: Colors.purple,
                   child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, //making box to circle
-                        color: Colors.deepOrangeAccent //background of container
-                        ),
-                    height: animation.value, //value from animation controller
-                    width: animation.value, //value from animation controller
+                    padding: EdgeInsets.all(20),
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, //making box to circle
+                          color:
+                              Colors.deepOrangeAccent //background of container
+                          ),
+                      height: animation.value, //value from animation controller
+                      width: animation.value, //value from animation controller
+                    ),
                   ),
                 ),
+
                 // Positioned(
                 //   bottom: -10,
                 //   child: Container(
@@ -126,21 +137,27 @@ class _MyHomePageState extends State<MyHomePage>
                   bottom: mediaWidth * 1.5 / 4,
                   right: mediaWidth * 1.5 / 4,
                   child: Container(
-                    padding: EdgeInsets.all(20),
-                    alignment: Alignment.center,
+                    color: Colors.blue,
                     child: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, //making box to circle
-                          color: Colors.white //background of container
-                          ),
-                      height:
-                          animation.value / 2, //value from animation controller
-                      width:
-                          animation.value / 2, //value from animation controller
+                      padding: EdgeInsets.all(20),
+                      alignment: Alignment.center,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, //making box to circle
+                            color: Colors.white //background of container
+                            ),
+                        height: animation.value /
+                            2, //value from animation controller
+                        width: animation.value /
+                            2, //value from animation controller
+                      ),
                     ),
                   ),
                 ),
               ]),
+            ),
+            CustomPaint(
+              painter: OpenPainter(animation.value),
             ),
             //button
             Positioned(
@@ -176,5 +193,87 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class OpenPainter extends CustomPainter {
+  double mySize;
+  OpenPainter(this.mySize);
+  // @override
+  // void paint(Canvas canvas, Size size) {
+  //   var paint1 = Paint()
+  //     ..color = Color(0xff63aa65)
+  //     ..style = PaintingStyle.stroke
+  //     ..strokeWidth = 20;
+  //   //draw arc
+  //   canvas.drawArc(
+  //       Offset(120, 450) & Size(mySize, mySize),
+  //       3.14159, //radians
+  //       1.5708, //radians
+  //       false,
+  //       paint1);
+  // }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    print('size is $size');
+    Paint paint = Paint()
+      ..color = Colors.orange
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8.0;
+
+    Path path = Path();
+    path.moveTo(0, mySize / 2);
+    path.quadraticBezierTo(mySize / 2, mySize, mySize, mySize / 2);
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class SmilyFaceSmile extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = Colors.black;
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2 + (size.height * 0.15)),
+        height: size.height,
+        width: size.width,
+      ),
+      -pi,
+      -pi,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class NotAmused extends CustomPainter {
+  double mySize;
+  NotAmused(this.mySize);
+  @override
+  void paint(Canvas canvas, Size size) {
+    //mouth
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(mySize / 2, mySize / 2 + mySize * 0.28),
+        height: mySize * 0.2,
+        width: mySize * 0.4,
+      ),
+      0,
+      -pi,
+      false,
+      Paint()..color = Colors.black,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }
