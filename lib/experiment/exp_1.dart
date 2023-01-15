@@ -92,6 +92,18 @@ class _Exp1State extends State<Exp1> with SingleTickerProviderStateMixin {
   }
 }
 
+class MyCircle extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var path = Path();
+
+    // TODO: implement paint
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
 class MyShape extends CustomPainter {
   double mySize;
   MyShape(this.mySize);
