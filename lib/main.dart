@@ -1,6 +1,7 @@
 import 'package:animated_floatingbutton/experiment/exp_1.dart';
 import 'package:animated_floatingbutton/experiment/exp_2.dart';
 import 'package:animated_floatingbutton/experiment/exp_3.dart';
+import 'package:animated_floatingbutton/production/production.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Exp3(),
+      home: Production(),
     );
   }
 }

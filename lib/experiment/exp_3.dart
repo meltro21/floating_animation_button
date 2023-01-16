@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class Exp3State extends State<Exp3> with SingleTickerProviderStateMixin {
       ..addListener(() {
         setState(() {});
       });
-    _controller.forward();
+    //_controller.forward();
     _path = drawPath();
   }
 
@@ -55,8 +56,8 @@ class Exp3State extends State<Exp3> with SingleTickerProviderStateMixin {
                 ),
               ),
               Positioned(
-                top: calculate(_animation.value - 0.1).dy,
-                left: calculate(_animation.value - 0.1).dx,
+                top: calculate(_animation.value - 0.3).dy,
+                left: calculate(_animation.value - 0.3).dx,
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.red,
@@ -66,8 +67,8 @@ class Exp3State extends State<Exp3> with SingleTickerProviderStateMixin {
                 ),
               ),
               Positioned(
-                top: calculate(_animation.value - 0.2).dy,
-                left: calculate(_animation.value - 0.2).dx,
+                top: calculate(_animation.value - 0.6).dy,
+                left: calculate(_animation.value - 0.6).dx,
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.orange,
@@ -81,7 +82,8 @@ class Exp3State extends State<Exp3> with SingleTickerProviderStateMixin {
         ),
         ElevatedButton(
             onPressed: () {
-              _controller.reverse();
+              _controller.forward();
+              //_controller.reverse();
             },
             child: Text('Press me'))
       ]),
@@ -98,8 +100,14 @@ class Exp3State extends State<Exp3> with SingleTickerProviderStateMixin {
     Size size = Size(300, 300);
     Path path = Path();
     path.moveTo(0, size.height / 2);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height / 2);
+
+    // Method to convert degree to radians
+    double degToRad(num deg) => deg * (pi / 180.0);
+    // path.quadraticBezierTo(
+    //     size.width / 2, size.height, size.width, size.height / 2);
+
+    path.arcTo(Rect.fromCircle(center: Offset(100, 100), radius: 120),
+        degToRad(90), degToRad(270), true);
     return path;
   }
 
@@ -122,7 +130,7 @@ class PathPainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Colors.redAccent.withOpacity(0.3)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0;
+      ..strokeWidth = 30.0;
 
     canvas.drawPath(this.path, paint);
   }
