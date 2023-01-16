@@ -28,8 +28,10 @@ class _ProductionState extends State<Production>
     //radius
     _outerCircleAnimation = Tween<double>(begin: 0, end: 150).animate(
         CurvedAnimation(parent: _animationController, curve: Interval(0, 0.5)));
-    _innerCircleAnimation = Tween(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _animationController, curve: Interval(0.5, 1)));
+    _innerCircleAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(0.5, 1),
+    ));
 
     _animationController.addListener(() {
       setState(() {});
@@ -92,19 +94,36 @@ class _ProductionState extends State<Production>
           ),
           onlyOnce == false
               ? Positioned(
-                  top: calculate(_innerCircleAnimation.value).dy,
-                  left: calculate(_innerCircleAnimation.value).dx,
+                  top: calculate(_innerCircleAnimation.value).dy - 20,
+                  left: calculate(_innerCircleAnimation.value).dx - 20,
                   // top: 100,
                   // left: 100,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10)),
-                    width: 10,
-                    height: 10,
-                  ),
+                  child:
+                      Column(children: [Icon(Icons.ac_unit), Text('Ac Unit')]),
                 )
               : SizedBox(),
+          onlyOnce == false
+              ? Positioned(
+                  top: calculate(_innerCircleAnimation.value - 0.167).dy - 15,
+                  left: calculate(_innerCircleAnimation.value - 0.167).dx - 50,
+                  // top: 100,
+                  // left: 100,
+                  child: Column(
+                      children: [Icon(Icons.access_time), Text('AccessTime')]),
+                )
+              : SizedBox(),
+
+          onlyOnce == false
+              ? Positioned(
+                  top: calculate(_innerCircleAnimation.value - 0.33).dy - 15,
+                  left: calculate(_innerCircleAnimation.value - 0.33).dx - 30,
+                  // top: 100,
+                  // left: 100,
+                  child:
+                      Column(children: [Icon(Icons.ac_unit), Text('Ac Unit')]),
+                )
+              : SizedBox(),
+
           // CustomPaint(
           //   painter: PathPainter(_path),
           //   child: Container(),
@@ -198,7 +217,7 @@ class OuterCircle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.redAccent.withOpacity(0.3)
+      ..color = Colors.red
       ..style = PaintingStyle.stroke
       ..strokeWidth = 100.0;
 
