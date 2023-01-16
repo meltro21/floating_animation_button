@@ -30,7 +30,7 @@ class _ProductionState extends State<Production>
         CurvedAnimation(parent: _animationController, curve: Interval(0, 0.5)));
     _innerCircleAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Interval(0.5, 1),
+      curve: Interval(0.5, 1.0),
     ));
 
     _animationController.addListener(() {
@@ -58,8 +58,8 @@ class _ProductionState extends State<Production>
         Rect.fromCircle(
             center: Offset(mediaWidth - 40, mediaHeight - 40),
             radius: myRadius),
-        degToRad(90),
-        degToRad(180),
+        degToRad(120),
+        degToRad(200),
         true);
     return path;
   }
@@ -94,8 +94,8 @@ class _ProductionState extends State<Production>
           ),
           onlyOnce == false
               ? Positioned(
-                  top: calculate(_innerCircleAnimation.value).dy - 20,
-                  left: calculate(_innerCircleAnimation.value).dx - 20,
+                  top: calculate(_innerCircleAnimation.value - 0.26).dy - 12,
+                  left: calculate(_innerCircleAnimation.value - 0.26).dx - 30,
                   // top: 100,
                   // left: 100,
                   child:
@@ -104,8 +104,8 @@ class _ProductionState extends State<Production>
               : SizedBox(),
           onlyOnce == false
               ? Positioned(
-                  top: calculate(_innerCircleAnimation.value - 0.167).dy - 15,
-                  left: calculate(_innerCircleAnimation.value - 0.167).dx - 50,
+                  top: calculate(_innerCircleAnimation.value - 0.48).dy - 10,
+                  left: calculate(_innerCircleAnimation.value - 0.48).dx - 40,
                   // top: 100,
                   // left: 100,
                   child: Column(
@@ -115,8 +115,8 @@ class _ProductionState extends State<Production>
 
           onlyOnce == false
               ? Positioned(
-                  top: calculate(_innerCircleAnimation.value - 0.33).dy - 15,
-                  left: calculate(_innerCircleAnimation.value - 0.33).dx - 30,
+                  top: calculate(_innerCircleAnimation.value - 0.66).dy,
+                  left: calculate(_innerCircleAnimation.value - 0.66).dx - 26,
                   // top: 100,
                   // left: 100,
                   child:
@@ -176,38 +176,6 @@ class PathPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
-
-// class InnerHalfCircle extends CustomPainter {
-//   double mediaHeight;
-//   double mediaWidth;
-//   double myRadius;
-//   InnerHalfCircle(this.mediaHeight, this.mediaWidth, this.myRadius);
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     Paint paint = Paint()
-//       ..color = Color.fromARGB(255, 193, 147, 147).withOpacity(0.3)
-//       ..style = PaintingStyle.stroke
-//       ..strokeWidth = 20.0;
-
-//     // Method to convert degree to radians
-//     double degToRad(num deg) => deg * (pi / 180.0);
-
-//     Path path = Path();
-//     // path.arcTo(Rect.from  Rect.fromLTWH(mediaWidth - 40, mediaHeight - 40, 100, 100),
-//     //     degToRad(90), degToRad(270), true);
-//     path.arcTo(
-//         Rect.fromCircle(
-//             center: Offset(mediaWidth - 40, mediaHeight - 40),
-//             radius: myRadius),
-//         degToRad(90),
-//         degToRad(270),
-//         true);
-//     canvas.drawPath(path, paint);
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) => true;
-// }
 
 class OuterCircle extends CustomPainter {
   double mediaHeight;
