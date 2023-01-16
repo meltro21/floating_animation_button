@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flutter/src/widgets/container.dart';
@@ -13,31 +15,59 @@ class Production extends StatefulWidget {
 class _ProductionState extends State<Production>
     with SingleTickerProviderStateMixin {
   late Animation _outerCircleAnimation;
+  late Animation _innerCircleAnimation;
   late AnimationController _animationController;
-
+  late Path _path;
   bool toggle = false;
+  bool onlyOnce = true;
 
   @override
   void initState() {
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
     //radius
     _outerCircleAnimation = Tween<double>(begin: 0, end: 150).animate(
-        CurvedAnimation(parent: _animationController, curve: Interval(0, 1)));
+        CurvedAnimation(parent: _animationController, curve: Interval(0, 0.5)));
+    _innerCircleAnimation = Tween(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _animationController, curve: Interval(0.5, 1)));
 
     _animationController.addListener(() {
       setState(() {});
     });
+
     super.initState();
   }
 
-  toggleHelper() {
+  toggleHelper(double mediaHeight, double mediaWidth, double myRadius) {
+    onlyOnce = false;
     if (toggle == false) {
       _animationController.forward();
     } else {
       _animationController.reverse();
     }
     toggle = !toggle;
+  }
+
+  Path drawPath(double mediaHeight, double mediaWidth, double myRadius) {
+    // Method to convert degree to radians
+    double degToRad(num deg) => deg * (pi / 180.0);
+    Path path = Path();
+    path.arcTo(
+        Rect.fromCircle(
+            center: Offset(mediaWidth - 40, mediaHeight - 40),
+            radius: myRadius),
+        degToRad(90),
+        degToRad(180),
+        true);
+    return path;
+  }
+
+  Offset calculate(value) {
+    PathMetrics pathMetrics = _path.computeMetrics();
+    PathMetric pathMetric = pathMetrics.elementAt(0);
+    value = pathMetric.length * value;
+    Tangent? pos = pathMetric.getTangentForOffset(value);
+    return pos!.position;
   }
 
   @override
@@ -47,6 +77,11 @@ class _ProductionState extends State<Production>
     var padding = MediaQuery.of(context).padding;
     var mediaHeight = height - padding.top - padding.bottom;
 
+    if (onlyOnce) {
+      _path = drawPath(mediaHeight, mediaWidth, 150);
+      onlyOnce = false;
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Stack(children: [
@@ -55,6 +90,25 @@ class _ProductionState extends State<Production>
                 mediaHeight, mediaWidth, _outerCircleAnimation.value),
             child: Container(),
           ),
+          onlyOnce == false
+              ? Positioned(
+                  top: calculate(_innerCircleAnimation.value).dy,
+                  left: calculate(_innerCircleAnimation.value).dx,
+                  // top: 100,
+                  // left: 100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10)),
+                    width: 10,
+                    height: 10,
+                  ),
+                )
+              : SizedBox(),
+          // CustomPaint(
+          //   painter: PathPainter(_path),
+          //   child: Container(),
+          // ),
           // CustomPaint(
           //   painter: InnerHalfCircle(mediaHeight, mediaWidth),
           //   child: Container(),
@@ -64,7 +118,8 @@ class _ProductionState extends State<Production>
             left: mediaWidth - 70,
             child: GestureDetector(
               onTap: () {
-                toggleHelper();
+                toggleHelper(
+                    mediaHeight, mediaWidth, _innerCircleAnimation.value);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -84,37 +139,56 @@ class _ProductionState extends State<Production>
   }
 }
 
-class InnerHalfCircle extends CustomPainter {
-  double mediaHeight;
-  double mediaWidth;
-  double myRadius;
-  InnerHalfCircle(this.mediaHeight, this.mediaWidth, this.myRadius);
+class PathPainter extends CustomPainter {
+  Path path;
+
+  PathPainter(this.path);
+
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color.fromARGB(255, 193, 147, 147).withOpacity(0.3)
+      ..color = Colors.redAccent.withOpacity(0.3)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 20.0;
+      ..strokeWidth = 100.0;
 
-    // Method to convert degree to radians
-    double degToRad(num deg) => deg * (pi / 180.0);
-
-    Path path = Path();
-    // path.arcTo(Rect.from  Rect.fromLTWH(mediaWidth - 40, mediaHeight - 40, 100, 100),
-    //     degToRad(90), degToRad(270), true);
-    path.arcTo(
-        Rect.fromCircle(
-            center: Offset(mediaWidth - 40, mediaHeight - 40),
-            radius: myRadius),
-        degToRad(90),
-        degToRad(270),
-        true);
-    canvas.drawPath(path, paint);
+    canvas.drawPath(this.path, paint);
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
+// class InnerHalfCircle extends CustomPainter {
+//   double mediaHeight;
+//   double mediaWidth;
+//   double myRadius;
+//   InnerHalfCircle(this.mediaHeight, this.mediaWidth, this.myRadius);
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     Paint paint = Paint()
+//       ..color = Color.fromARGB(255, 193, 147, 147).withOpacity(0.3)
+//       ..style = PaintingStyle.stroke
+//       ..strokeWidth = 20.0;
+
+//     // Method to convert degree to radians
+//     double degToRad(num deg) => deg * (pi / 180.0);
+
+//     Path path = Path();
+//     // path.arcTo(Rect.from  Rect.fromLTWH(mediaWidth - 40, mediaHeight - 40, 100, 100),
+//     //     degToRad(90), degToRad(270), true);
+//     path.arcTo(
+//         Rect.fromCircle(
+//             center: Offset(mediaWidth - 40, mediaHeight - 40),
+//             radius: myRadius),
+//         degToRad(90),
+//         degToRad(270),
+//         true);
+//     canvas.drawPath(path, paint);
+//   }
+
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) => true;
+// }
 
 class OuterCircle extends CustomPainter {
   double mediaHeight;

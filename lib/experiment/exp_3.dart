@@ -38,12 +38,12 @@ class Exp3State extends State<Exp3> with SingleTickerProviderStateMixin {
           width: 350,
           child: Stack(
             children: <Widget>[
-              Positioned(
-                top: 0,
-                child: CustomPaint(
-                  painter: PathPainter(_path),
-                ),
-              ),
+              // Positioned(
+              //   top: 0,
+              //   child: CustomPaint(
+              //     painter: PathPainter(_path),
+              //   ),
+              // ),
               Positioned(
                 top: calculate(_animation.value).dy,
                 left: calculate(_animation.value).dx,
